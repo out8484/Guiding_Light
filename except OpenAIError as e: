@@ -1,2 +1,0 @@
-except OpenAIError as e:
-    st.warning(f"OpenAI API error: {e}")
