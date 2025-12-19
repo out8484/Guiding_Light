@@ -1,4 +1,0 @@
-streamlit==1.25.0
-langchain==0.0.200  # Downgraded to ensure compatibility with langchain-openai
-openai>=1.0.0
-python-dotenv
