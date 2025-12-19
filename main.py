@@ -249,7 +249,7 @@ if not st.session_state.github_token:
             reset_input = st.form_submit_button("입력 초기화", type="secondary")
             
     if reset_input:
-        st.experimental_rerun()
+        st.rerun()
         
     if token_submit and token_input:
         with st.spinner("🔐 토큰 확인 중..."):
@@ -261,7 +261,7 @@ if not st.session_state.github_token:
                 # Save to .env file for persistence
                 save_token_to_env(clean_token)
                 st.success("✅ 토큰이 확인되고 .env 파일에 저장되었습니다! 이제 다시 입력할 필요가 없습니다.")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error(f"❌ 유효하지 않은 토큰입니다: {msg}")
 
@@ -285,7 +285,7 @@ if st.session_state.github_token:
             st.session_state.github_token = None
             # Optional: Clear from .env as well if user wants to fully reset
             # save_token_to_env("") 
-            st.experimental_rerun()
+            st.rerun()
 
     # Use form to enable Enter key submission
     with st.form(key="question_form", clear_on_submit=True):
@@ -327,7 +327,7 @@ if st.session_state.github_token:
                         st.error("⚠️ 인증에 실패했습니다 (토큰 만료/오류). 로그인 화면으로 이동합니다.")
                         st.session_state.github_token = None
                         st.session_state.auth_failure_reset = True
-                        st.experimental_rerun()
+                        st.rerun()
         else:
             st.warning("질문을 입력해주세요.")
 
