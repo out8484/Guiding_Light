@@ -387,7 +387,7 @@ if st.session_state.github_token:
                 
                 # Inference Simulation: Show tokens appearing one by one
                 for chunk in stream:
-                    if chunk.choices[0].delta.content is not None:
+                    if chunk.choices and len(chunk.choices) > 0 and chunk.choices[0].delta.content is not None:
                         chunk_content = chunk.choices[0].delta.content
                         full_response += chunk_content
                         # Update UI with "cursor" effect to simulate typing
