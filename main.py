@@ -441,24 +441,55 @@ if st.session_state.github_token:
                 """)
 
             with tab3:
-                st.header("🔍 인코딩 & 임베딩 시각화")
-                st.markdown("AI는 글자를 이해하지 못합니다. 대신 **숫자(Token ID)**로 변환하여 처리합니다.")
+                st.header("🔍 인코딩 & 임베딩 원리 심층 분석")
                 
-                st.subheader("1. 입력 질문의 토큰화 (Tokenization)")
+                # 1. Input Analysis
+                st.subheader("1️⃣ 입력 데이터(질문)의 처리")
+                st.markdown(f"**사용자 질문:** \"{user_question}\"")
+                st.markdown("AI는 이 문장을 이해하기 위해 가장 먼저 **토큰(Token)**이라는 의미 단위로 조각냅니다.")
+                
+                # Visualize Input Tokens
+                st.caption("▼ 텍스트가 토큰으로 분리된 모습 (색상별로 다른 토큰임)")
                 st.markdown(visualize_tokens(user_question), unsafe_allow_html=True)
                 
-                st.subheader("2. 정수 인코딩 (Encoding)")
-                st.markdown("위의 각 조각들은 다음과 같은 **고유한 숫자 ID**로 컴퓨터에 전달됩니다.")
-                token_ids = get_token_ids(user_question)
-                st.code(str(token_ids), language="json")
-                
-                st.subheader("3. 임베딩 (Embedding) 개념")
                 st.markdown("""
-                > **임베딩이란?** 
-                > 위에서 본 숫자(Token ID) 하나하나를 **수천 개의 실수(float)로 이루어진 벡터** 좌표로 변환하는 과정입니다. 
-                > 이를 통해 AI는 단어의 **'의미'**를 수학적으로 이해하게 됩니다.
+                이 조각들은 컴퓨터가 이해할 수 있는 **고유한 숫자(ID)**로 변환됩니다. 
+                이 과정을 **인코딩(Encoding)**이라고 합니다.
                 """)
-                st.image("https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.png", caption="임베딩 벡터 시각화 예시 (출처: OpenAI)", width=600)
+                st.code(f"입력 토큰 ID 목록: {str(get_token_ids(user_question))}", language="json")
+                
+                st.divider()
+
+                # 2. Embedding Concept
+                st.subheader("2️⃣ 임베딩(Embedding) 변환")
+                st.markdown("""
+                변환된 숫자(ID)들은 모델 내부에서 **임베딩 벡터(Vector)**로 다시 변환됩니다.
+                
+                > **임베딩이란?**  
+                > 단어를 수천 개의 숫자로 이루어진 좌표(벡터)로 바꾸는 것입니다.  
+                > 이렇게 하면 **비스한 의미를 가진 단어는 공간상에서 서로 가깝게 위치**하게 되어, AI가 단어의 '뜻'과 '맥락'을 수학적으로 계산할 수 있게 됩니다.
+                """)
+                st.image("https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.png", caption="임베딩 벡터 공간 시각화 (비슷한 단어끼리 뭉쳐 있음)", width=600)
+
+                st.divider()
+
+                # 3. Output Analysis (NEW)
+                st.subheader("3️⃣ 출력 데이터(답변)의 생성")
+                st.markdown("""
+                AI는 입력된 토큰들과 그 의미(임베딩)를 바탕으로, **다음에 올 가장 확률이 높은 토큰**을 하나씩 예측하여 이어 붙입니다.
+                아래는 AI가 방금 생성한 답변을 토큰 단위로 분석한 결과입니다.
+                """)
+                
+                # Visualize Output Tokens
+                st.caption(f"▼ 생성된 답변 ({output_tokens} 토큰)")
+                st.markdown(visualize_tokens(full_response), unsafe_allow_html=True)
+                
+                st.markdown("AI도 우리에게 글자를 보여주기 위해, 내부적으로 생성한 **숫자(ID)**를 다시 **글자(Decoding)**로 바꾼 것입니다.")
+                
+                # Show first 50 token IDs of response to save space
+                resp_ids = get_token_ids(full_response)
+                display_ids = str(resp_ids[:50]) + "..." if len(resp_ids) > 50 else str(resp_ids)
+                st.code(f"출력 토큰 ID 목록 (일부): {display_ids}", language="json")
 
     elif submit_button:
         st.warning("질문을 입력해주세요.")
